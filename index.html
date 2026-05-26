@@ -346,26 +346,7 @@
         });
 
         // Form submission handler
-        const contactForm = document.querySelector('.contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // Get form values
-                const name = contactForm.querySelector('input[type="text"]').value;
-                const email = contactForm.querySelector('input[type="email"]').value;
-                const subject = contactForm.querySelectorAll('input[type="text"]')[1].value;
-                const message = contactForm.querySelector('textarea').value;
-                
-                // Here you would typically send the data to a server
-                // For now, we'll just show an alert
-                alert(`Thank you for your message, ${name}! I'll get back to you soon.`);
-                
-                // Reset form
-                contactForm.reset();
-            });
-        }
-
+        
         // Add fade-in animation on scroll
         const observerOptions = {
             threshold: 0.1,
@@ -424,6 +405,53 @@
             // Trigger initial active nav link check
             updateActiveNavLink();
         });
+        // 
+        // Form submission handler
+const contactForm = document.querySelector('.contact-form');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const name = contactForm.querySelector('input[type="text"]').value;
+        const email = contactForm.querySelector('input[type="email"]').value;
+        const subject = contactForm.querySelectorAll('input[type="text"]')[1].value;
+        const message = contactForm.querySelector('textarea').value;
+
+        try {
+            // API Call
+            const response = await fetch('http://localhost:5000/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    subject,
+                    message
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("Message sent successfully!");
+
+                // Reset form
+                contactForm.reset();
+            } else {
+                alert(data.error || "Something went wrong");
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Server error");
+        }
+    });
+}
+        
     </script>
 </body>
 </html>
