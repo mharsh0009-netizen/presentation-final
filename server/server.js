@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dns = require("dns");
+const path = require("path");
+
 require("dotenv").config();
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
@@ -10,6 +12,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname)));
 
 const contactRoutes = require("./routes/contactRoutes");
 
